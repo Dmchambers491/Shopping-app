@@ -1,10 +1,21 @@
 package com.shoppingapp.application;
 
 import java.util.Scanner;
-import com.dollarsbank.utility.ColorsUtility.Colors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import com.shoppingapp.dao.CustomerDAO;
+import com.shoppingapp.dao.CustomerDAOImp;
+import com.shoppingapp.model.Customer;
+import com.shoppingapp.utility.ColorsUtility.Colors;
+
+import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.List;
 
 public class ShoppingApplication {
+	
+	public static final CustomerDAO customerdao = new CustomerDAOImp();
 	
 	public static void welcome() {
 		int choice = 0;
@@ -26,21 +37,176 @@ public class ShoppingApplication {
 				choice = input.nextInt();
 				switch(choice) {
 					case 1:
+						register();
+						valid = false;
 						break;
 					case 2:
+						login();
+						valid = false;
 						break;
 					case 3:
 						break;
 					case 4:
 						break;
 					case 5:
+						exit();
+						valid = false;
 						break;
 					default:
+						System.out.println(Colors.ANSI_RED.getColor() + "Invalid choice!!\n" + Colors.ANSI_RESET.getColor());
 						break;
 				}
 			}catch(InputMismatchException e) {
 				input.nextLine();
 				System.out.println(Colors.ANSI_RED.getColor() + "Please enter a number!\n");
+			}
+		}
+	}
+	
+	public static boolean verifyPattern(Pattern p, String s) {
+		Matcher matcher = p.matcher(s);
+		if(matcher.matches() == true) {
+			return true;
+		}
+		return false;
+	}
+	
+	public static void register() {
+		String name;
+		String address;
+		String phone_number;
+		String username;
+		String password;
+		int balance = 0;
+		int choice;
+		boolean valid = true;
+		Scanner input = new Scanner(System.in);
+		
+		Pattern namePattern = Pattern.compile("^(([a-z]+|[a-zA-Z]+))|([a-zA-Z]+\\s{1}[a-zA-Z]+)$");
+		Pattern phonePattern = Pattern.compile("^.?\\d{3}.?(\\s{1}|.)?\\d{3}.?\\d{4}$");
+		Pattern passwordPattern = Pattern.compile("(?=.*[a-z])(?=.*[@#$%!^&])(?=.*[A-Z]).{8}");
+		
+		while(valid) {
+			System.out.println(Colors.ANSI_BLUE.getColor() + "\n+-----------------------------------+\n| Please Complete Registration Form |\n+-----------------------------------+" + Colors.ANSI_RESET.getColor());
+			
+			try {
+				System.out.println(Colors.ANSI_GREEN.getColor() + "Enter Name:");
+				System.out.print(Colors.ANSI_CYAN.getColor());
+				name = input.nextLine();
+				if(verifyPattern(namePattern, name) == false) {
+					throw new Exception();
+				}
+				System.out.println(Colors.ANSI_GREEN.getColor() + "Enter Address:");
+				System.out.print(Colors.ANSI_CYAN.getColor());
+				address = input.nextLine();
+				System.out.println(Colors.ANSI_GREEN.getColor() + "Enter Phone Number:");
+				System.out.print(Colors.ANSI_CYAN.getColor());
+				phone_number = input.nextLine();
+				if(verifyPattern(phonePattern, phone_number) == false) {
+					throw new Exception();
+				}
+				System.out.println(Colors.ANSI_GREEN.getColor() + "Create Username:");
+				System.out.print(Colors.ANSI_CYAN.getColor());
+				username = input.nextLine();
+				Customer usernameCheck = customerdao.getCustomerByUsername(username);
+				if(usernameCheck == null) {
+					System.out.println(Colors.ANSI_GREEN.getColor() + "Password: 8 Characters With Lower, Upper & Special");
+					System.out.print(Colors.ANSI_CYAN.getColor());
+					password = input.nextLine();
+					if(verifyPattern(passwordPattern, password)) {
+						Customer passwordCheck = customerdao.getCustomerByPassword(password);
+						if(passwordCheck == null) {
+							System.out.println(Colors.ANSI_GREEN.getColor() + "Do you wish to add money to your account? 1=Yes, 2=No");
+							System.out.print(Colors.ANSI_CYAN.getColor());
+							choice = input.nextInt();
+							switch(choice) {
+							case 1:
+								System.out.println(Colors.ANSI_GREEN.getColor() + "How much do you wish to add?");
+								System.out.print(Colors.ANSI_CYAN.getColor());
+								balance = input.nextInt();
+								if(balance > 0) {
+									Customer customer = new Customer(username, name, password, address, phone_number, balance);
+									customerdao.addCustomer(customer);
+									valid = false;
+									System.out.println(Colors.ANSI_GREEN.getColor() + "Successfully Completed Registration!!");
+									login();
+									break;
+								}else {
+									throw new Exception();
+								}
+							case 2:
+								Customer customer2 = new Customer(username, name, password, address, phone_number, balance);
+								customerdao.addCustomer(customer2);
+								valid = false;
+								System.out.println(Colors.ANSI_GREEN.getColor() + "Successfully Completed Registration!!");
+								login();
+								break;
+							default:
+								System.out.println(Colors.ANSI_RED.getColor() + "Please enter a Valid option!!");
+								break;
+							}
+						}else {
+							throw new Exception();
+						}
+					}else {
+						throw new Exception();
+					}
+				}else {
+					throw new Exception();
+				}
+			}catch(Exception e) {
+				System.out.println(Colors.ANSI_RED.getColor() + "Please enter a number!\n");
+			}
+		}
+	}
+	
+	public static boolean checkLoginSuccess(int num) {
+		if(num == 3) {
+			System.out.println(Colors.ANSI_RED.getColor() + "Too many unsuccessful logins!!");
+			exit();
+			return false;
+		}
+		return true;
+	}
+	
+	public static void exit() {
+		System.out.println(Colors.ANSI_PURPLE.getColor() + "Thank you for using The Shoppings App!! Goodbye!" + Colors.ANSI_RESET.getColor());
+	}
+	
+	public static void login() {
+		String username;
+		String password;
+		boolean valid = true;
+		int counter = 0;
+		
+		Scanner input = new Scanner(System.in);
+		
+		while(valid) {
+			System.out.println(Colors.ANSI_BLUE.getColor() + "\n+---------------------+\n| Enter Login Details |\n+---------------------+" + Colors.ANSI_RESET.getColor());
+			System.out.println(Colors.ANSI_RESET.getColor() + "Username:");
+			try {
+				System.out.print(Colors.ANSI_CYAN.getColor());
+				username = input.nextLine();
+				Customer found = customerdao.getCustomerByUsername(username);
+				if(found != null) {
+					System.out.println(Colors.ANSI_RESET.getColor() + "Password: 8 Characters With Lower, Upper & Special");
+					System.out.print(Colors.ANSI_CYAN.getColor());
+					password = input.nextLine();
+					if(password.equals(found.getPassword())) {
+						System.out.println(Colors.ANSI_GREEN.getColor() + "Login Successful!!" + Colors.ANSI_RESET.getColor());
+						valid = false;
+//						welcomeCustomer(found);
+					}else {
+						counter += 1;
+						throw new Exception();
+					}
+				}else {
+					counter += 1;
+					throw new Exception();
+				}
+			} catch (Exception e) {
+				System.out.println(Colors.ANSI_RED.getColor() + "No user found!!");
+				valid = checkLoginSuccess(counter);
 			}
 		}
 	}

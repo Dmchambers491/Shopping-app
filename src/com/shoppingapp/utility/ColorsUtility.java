@@ -1,4 +1,4 @@
-package com.dollarsbank.utility;
+package com.shoppingapp.utility;
 
 public class ColorsUtility {
 	
