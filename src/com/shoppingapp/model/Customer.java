@@ -7,13 +7,13 @@ public class Customer {
 	private String password;
 	private String address;
 	private String phone_number;
-	private int balance;
+	private double balance;
 	
 	public Customer() {
 		this("N/A", "N/A", "N/A", "N/A", "N/A", 0);
 	}
 
-	public Customer(String username, String name, String address, String phone_number, String password, int balance) {
+	public Customer(String username, String name, String address, String phone_number, String password, double balance) {
 		super();
 		this.username = username;
 		this.name = name;
@@ -63,11 +63,11 @@ public class Customer {
 		this.phone_number = phone_number;
 	}
 
-	public int getBalance() {
+	public double getBalance() {
 		return balance;
 	}
 
-	public void setBalance(int balance) {
+	public void setBalance(double balance) {
 		this.balance = balance;
 	}
 

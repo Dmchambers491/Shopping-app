@@ -28,7 +28,7 @@ public class CustomerDAOImp implements CustomerDAO {
 				String address = rs.getString(3);
 				String phone_number = rs.getString(4);
 				String password = rs.getString(5);
-				int balance = rs.getInt(6);
+				double balance = rs.getInt(6);
 				
 				// add to list
 				Customer customer = new Customer(username, name, address, phone_number, password, balance);
@@ -59,7 +59,7 @@ public class CustomerDAOImp implements CustomerDAO {
 				String address = rs.getString(3);
 				String phone_number = rs.getString(4);
 				String password = rs.getString(5);
-				int balance = rs.getInt(6);
+				double balance = rs.getInt(6);
 				
 				customer = new Customer(cust_username, name, address, phone_number, password, balance);
 			}
@@ -84,7 +84,7 @@ public class CustomerDAOImp implements CustomerDAO {
 			pstmt.setString(3, customer.getAddress());
 			pstmt.setString(4, customer.getPhone_number());
 			pstmt.setString(5, customer.getPassword());
-			pstmt.setInt(6, customer.getBalance());
+			pstmt.setDouble(6, customer.getBalance());
 			
 			int insert = pstmt.executeUpdate();
 			
@@ -119,7 +119,7 @@ public class CustomerDAOImp implements CustomerDAO {
 				String address = rs.getString(3);
 				String phone_number = rs.getString(4);
 				String cust_password = rs.getString(5);
-				int balance = rs.getInt(6);
+				double balance = rs.getInt(6);
 				
 				customer = new Customer(username, name, address, phone_number, cust_password, balance);
 			}

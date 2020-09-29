@@ -9,7 +9,6 @@ import com.shoppingapp.dao.CustomerDAOImp;
 import com.shoppingapp.model.Customer;
 import com.shoppingapp.utility.ColorsUtility.Colors;
 
-import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 
@@ -51,6 +50,43 @@ public class ShoppingApplication {
 					case 5:
 						exit();
 						valid = false;
+						break;
+					default:
+						System.out.println(Colors.ANSI_RED.getColor() + "Invalid choice!!\n" + Colors.ANSI_RESET.getColor());
+						break;
+				}
+			}catch(InputMismatchException e) {
+				input.nextLine();
+				System.out.println(Colors.ANSI_RED.getColor() + "Please enter a number!\n");
+			}
+		}
+	}
+	
+	public static void welcomeAfterLogin(Customer customer) {
+		int choice = 0;
+		Scanner input = new Scanner(System.in);
+		boolean valid = true;
+		
+		while(valid) {
+			System.out.println(Colors.ANSI_BLUE.getColor() + "Standalone Ecommerce App");
+			System.out.println(Colors.ANSI_PURPLE.getColor() + "+=======================+");
+			System.out.println(Colors.ANSI_PURPLE.getColor() + "|" + Colors.ANSI_CYAN.getColor() + "1.BUY AN ITEM\t\t" + Colors.ANSI_PURPLE.getColor() + "|");
+			System.out.println(Colors.ANSI_PURPLE.getColor() + "|" + Colors.ANSI_CYAN.getColor() + "2.REPLACE AN ITEM\t" + Colors.ANSI_PURPLE.getColor() + "|");
+			System.out.println(Colors.ANSI_PURPLE.getColor() + "|" + Colors.ANSI_CYAN.getColor() + "3.SIGNOUT\t\t\t" + Colors.ANSI_PURPLE.getColor() + "|");
+			System.out.println(Colors.ANSI_PURPLE.getColor() + "+=======================+");
+			System.out.println(Colors.ANSI_GREEN.getColor() + "\nEnter Choice (1,2, or 3) :" + Colors.ANSI_RESET.getColor());
+			
+			try{
+				choice = input.nextInt();
+				switch(choice) {
+					case 1:
+						valid = false;
+						break;
+					case 2:
+						valid = false;
+						break;
+					case 3:
+						signOut();
 						break;
 					default:
 						System.out.println(Colors.ANSI_RED.getColor() + "Invalid choice!!\n" + Colors.ANSI_RESET.getColor());
@@ -170,7 +206,12 @@ public class ShoppingApplication {
 	}
 	
 	public static void exit() {
-		System.out.println(Colors.ANSI_PURPLE.getColor() + "Thank you for using The Shoppings App!! Goodbye!" + Colors.ANSI_RESET.getColor());
+		System.out.println(Colors.ANSI_PURPLE.getColor() + "Thank you for using The Shopping App!! Goodbye!" + Colors.ANSI_RESET.getColor());
+	}
+	
+	public static void signOut() {
+		System.out.println(Colors.ANSI_GREEN.getColor() + "Successfully Logged Out!!\n" + Colors.ANSI_RESET.getColor());
+		welcome();
 	}
 	
 	public static void login() {
@@ -193,9 +234,9 @@ public class ShoppingApplication {
 					System.out.print(Colors.ANSI_CYAN.getColor());
 					password = input.nextLine();
 					if(password.equals(found.getPassword())) {
-						System.out.println(Colors.ANSI_GREEN.getColor() + "Login Successful!!" + Colors.ANSI_RESET.getColor());
+						System.out.println(Colors.ANSI_GREEN.getColor() + "Login Successful!!\n" + Colors.ANSI_RESET.getColor());
 						valid = false;
-//						welcomeCustomer(found);
+						welcomeAfterLogin(found);
 					}else {
 						counter += 1;
 						throw new Exception();
@@ -209,6 +250,12 @@ public class ShoppingApplication {
 				valid = checkLoginSuccess(counter);
 			}
 		}
+	}
+	
+	public static void displayItems() {
+		System.out.println(Colors.ANSI_BLUE.getColor() + "\nStandalone Ecommerce App");
+		System.out.println(Colors.ANSI_PURPLE.getColor() + "+=======================+");
+		System.out.println("|" + Colors.ANSI_CYAN.getColor() + "Items\tItem Code  Price" + Colors.ANSI_PURPLE.getColor() + "|");
 	}
 
 	public static void main(String[] args) {
