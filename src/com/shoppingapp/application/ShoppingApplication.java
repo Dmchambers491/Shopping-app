@@ -6,7 +6,10 @@ import java.util.regex.Pattern;
 
 import com.shoppingapp.dao.CustomerDAO;
 import com.shoppingapp.dao.CustomerDAOImp;
+import com.shoppingapp.dao.ItemDAO;
+import com.shoppingapp.dao.ItemDAOImp;
 import com.shoppingapp.model.Customer;
+import com.shoppingapp.model.Items;
 import com.shoppingapp.utility.ColorsUtility.Colors;
 
 import java.util.InputMismatchException;
@@ -15,9 +18,11 @@ import java.util.List;
 public class ShoppingApplication {
 	
 	public static final CustomerDAO customerdao = new CustomerDAOImp();
+	public static final ItemDAO itemdao = new ItemDAOImp();
 	
 	public static void welcome() {
 		int choice = 0;
+		int choice2 = 0;
 		Scanner input = new Scanner(System.in);
 		boolean valid = true;
 		
@@ -44,9 +49,31 @@ public class ShoppingApplication {
 						valid = false;
 						break;
 					case 3:
-						break;
+						System.out.println(Colors.ANSI_RED.getColor() + "You must Register for an Account or Login to Buy an item!!");
+						System.out.println("Enter 1=register or 2=login:");
+						choice2 = input.nextInt();
+						if(choice2 == 1) {
+							register();
+							valid = false;
+							break;
+						}else if(choice2 == 2) {
+							login();
+							valid = false;
+							break;
+						}
 					case 4:
-						break;
+						System.out.println(Colors.ANSI_RED.getColor() + "You must Register for an Account or Login to Replace an item!!");
+						System.out.println("Enter 1=register or 2=login:");
+						choice2 = input.nextInt();
+						if(choice2 == 1) {
+							register();
+							valid = false;
+							break;
+						}else if(choice2 == 2) {
+							login();
+							valid = false;
+							break;
+						}
 					case 5:
 						exit();
 						valid = false;
@@ -80,6 +107,7 @@ public class ShoppingApplication {
 				choice = input.nextInt();
 				switch(choice) {
 					case 1:
+						buyItem(customer);
 						valid = false;
 						break;
 					case 2:
@@ -97,6 +125,17 @@ public class ShoppingApplication {
 				System.out.println(Colors.ANSI_RED.getColor() + "Please enter a number!\n");
 			}
 		}
+	}
+	
+	public static void buyItem(Customer customer) {
+		System.out.println(Colors.ANSI_BLUE.getColor() + "\nStandalone Ecommerce App");
+		System.out.println(Colors.ANSI_PURPLE.getColor() + "+=======================+");
+		System.out.println("|" + Colors.ANSI_CYAN.getColor() + "Items\tItem Code  Price" + Colors.ANSI_PURPLE.getColor() + "|");
+		List<Items> items = itemdao.getAllItems();
+		for(Items i : items) {
+			System.out.println(Colors.ANSI_PURPLE.getColor() + "|" + Colors.ANSI_CYAN.getColor() + i.getName() + "\t   " + i.getId() + "\t   $" + i.getPrice() + Colors.ANSI_PURPLE.getColor() + "|");
+		}
+		System.out.println("+=======================+");
 	}
 	
 	public static boolean verifyPattern(Pattern p, String s) {
@@ -199,7 +238,8 @@ public class ShoppingApplication {
 	public static boolean checkLoginSuccess(int num) {
 		if(num == 3) {
 			System.out.println(Colors.ANSI_RED.getColor() + "Too many unsuccessful logins!!");
-			exit();
+			System.out.println(Colors.ANSI_RED.getColor() + "Please Register for an account or try logging in");
+			register();
 			return false;
 		}
 		return true;
