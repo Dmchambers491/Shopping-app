@@ -99,7 +99,7 @@ public class ShoppingApplication {
 			System.out.println(Colors.ANSI_PURPLE.getColor() + "+=======================+");
 			System.out.println(Colors.ANSI_PURPLE.getColor() + "|" + Colors.ANSI_CYAN.getColor() + "1.BUY AN ITEM\t\t" + Colors.ANSI_PURPLE.getColor() + "|");
 			System.out.println(Colors.ANSI_PURPLE.getColor() + "|" + Colors.ANSI_CYAN.getColor() + "2.REPLACE AN ITEM\t" + Colors.ANSI_PURPLE.getColor() + "|");
-			System.out.println(Colors.ANSI_PURPLE.getColor() + "|" + Colors.ANSI_CYAN.getColor() + "3.SIGNOUT\t\t\t" + Colors.ANSI_PURPLE.getColor() + "|");
+			System.out.println(Colors.ANSI_PURPLE.getColor() + "|" + Colors.ANSI_CYAN.getColor() + "3.SIGNOUT\t\t" + Colors.ANSI_PURPLE.getColor() + "|");
 			System.out.println(Colors.ANSI_PURPLE.getColor() + "+=======================+");
 			System.out.println(Colors.ANSI_GREEN.getColor() + "\nEnter Choice (1,2, or 3) :" + Colors.ANSI_RESET.getColor());
 			
@@ -128,14 +128,19 @@ public class ShoppingApplication {
 	}
 	
 	public static void buyItem(Customer customer) {
+		int choice = 0;
+		int number = 1;
 		System.out.println(Colors.ANSI_BLUE.getColor() + "\nStandalone Ecommerce App");
 		System.out.println(Colors.ANSI_PURPLE.getColor() + "+=======================+");
-		System.out.println("|" + Colors.ANSI_CYAN.getColor() + "Items\tItem Code  Price" + Colors.ANSI_PURPLE.getColor() + "|");
+		System.out.println("|" + Colors.ANSI_CYAN.getColor() + "\tItems\t  Item Code  Price" + Colors.ANSI_PURPLE.getColor() + "|");
 		List<Items> items = itemdao.getAllItems();
 		for(Items i : items) {
-			System.out.println(Colors.ANSI_PURPLE.getColor() + "|" + Colors.ANSI_CYAN.getColor() + i.getName() + "\t   " + i.getId() + "\t   $" + i.getPrice() + Colors.ANSI_PURPLE.getColor() + "|");
+			System.out.println(Colors.ANSI_PURPLE.getColor() + "|" + Colors.ANSI_YELLOW.getColor() + number + "." + i.getName() + "    " + i.getId() + "     $" + i.getPrice() + Colors.ANSI_PURPLE.getColor() + "|");
+			number += 1;
 		}
 		System.out.println("+=======================+");
+		
+		System.out.println();
 	}
 	
 	public static boolean verifyPattern(Pattern p, String s) {
@@ -264,13 +269,13 @@ public class ShoppingApplication {
 		
 		while(valid) {
 			System.out.println(Colors.ANSI_BLUE.getColor() + "\n+---------------------+\n| Enter Login Details |\n+---------------------+" + Colors.ANSI_RESET.getColor());
-			System.out.println(Colors.ANSI_RESET.getColor() + "Username:");
+			System.out.println(Colors.ANSI_GREEN.getColor() + "Username:");
 			try {
 				System.out.print(Colors.ANSI_CYAN.getColor());
 				username = input.nextLine();
 				Customer found = customerdao.getCustomerByUsername(username);
 				if(found != null) {
-					System.out.println(Colors.ANSI_RESET.getColor() + "Password: 8 Characters With Lower, Upper & Special");
+					System.out.println(Colors.ANSI_GREEN.getColor() + "Password: 8 Characters With Lower, Upper & Special");
 					System.out.print(Colors.ANSI_CYAN.getColor());
 					password = input.nextLine();
 					if(password.equals(found.getPassword())) {
@@ -290,12 +295,6 @@ public class ShoppingApplication {
 				valid = checkLoginSuccess(counter);
 			}
 		}
-	}
-	
-	public static void displayItems() {
-		System.out.println(Colors.ANSI_BLUE.getColor() + "\nStandalone Ecommerce App");
-		System.out.println(Colors.ANSI_PURPLE.getColor() + "+=======================+");
-		System.out.println("|" + Colors.ANSI_CYAN.getColor() + "Items\tItem Code  Price" + Colors.ANSI_PURPLE.getColor() + "|");
 	}
 
 	public static void main(String[] args) {
